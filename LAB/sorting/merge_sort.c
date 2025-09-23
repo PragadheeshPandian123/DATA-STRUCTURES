@@ -1,0 +1,28 @@
+# include <stdio.h>
+# include "merge_sort.h"
+# define size 100
+int main()
+{
+	int arr[size],n;
+	printf("Enter the size of the array : ");
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+	{
+		printf("Enter arr[%d]: " ,i);
+		scanf("%d",&arr[i]);
+	}
+	printf("The array before sorting is : \n");
+	for(int i=0;i<n;i++)
+	{
+		printf("%d ",arr[i]);
+	}
+	printf("\n");
+	merge_sort(arr,0,n-1);
+	printf("The array after sorting is : \n");
+        for(int i=0;i<n;i++)
+        {
+                printf("%d ",arr[i]);
+        }
+	printf("\n");
+	return 0;
+}
