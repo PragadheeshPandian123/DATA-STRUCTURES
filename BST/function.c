@@ -84,7 +84,7 @@ Node * delete(Node *root,int val)
     return root;
 }
 
-void inorder(Node *root){
+void inorder(Node *root){ 
     if(root!=NULL){
         inorder((root)->left);
         printf("%d ",root->data);
@@ -109,40 +109,15 @@ void postorder(Node * root){
     }
 }
 
-void displayTree(Node* root) {
-    if (!root) {
-        printf("Tree is empty!\n");
-        return;
+void display(Node * root,int space)
+{
+    if(!root)return;
+    space+=5;
+    display(root->right,space);
+    for(int i=5;i<space;i++)
+    {
+        printf(" ");
     }
-
-    Node* queue[100];
-    int front = 0, rear = 0;
-    queue[rear++] = root;
-
-    while (front < rear) {
-        int nodeCount = rear - front;
-        int allNullInLevel = 1;
-
-        for (int i = front; i < rear; i++) {
-            if (queue[i] != NULL) {
-                allNullInLevel = 0;
-                break;
-            }
-        }
-        if (allNullInLevel) break;
-
-        for (int i = 0; i < nodeCount; i++) {
-            Node* curr = queue[front++];
-            if (curr) {
-                printf("%d ", curr->data);
-                queue[rear++] = curr->left;
-                queue[rear++] = curr->right;
-            } else {
-                printf("X ");
-                queue[rear++] = NULL;
-                queue[rear++] = NULL;
-            }
-        }
-        printf("\n");
-    }
+    printf("%d\n",root->data);
+    display(root->left,space);
 }

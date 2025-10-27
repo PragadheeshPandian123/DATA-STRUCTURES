@@ -157,27 +157,18 @@ void postorder(Node* root) {
     printf("%d ", root->data);
 }
 
-void display(Node* root) {
-    if (root == NULL) {
-        printf("Tree is Empty\n");
+void display(Node * root,int space)
+{
+    if(root==NULL){
         return;
     }
-
-    Node* queue[200];
-    int front = 0, rear = 0;
-    queue[rear++] = root;
-
-    while (front < rear) {
-        Node* temp = queue[front++];
-        if (temp) {
-            printf(" %d ", temp->data);
-            queue[rear++] = temp->left;
-            queue[rear++] = temp->right;
-        } else {
-            printf(" X ");
-        }
+    space=space+5;
+    display(root->right,space);
+    for(int i=5;i<space;i++){
+        printf(" ");
     }
-    printf("\n");
+    printf("%d\n",root->data);
+    display(root->left,space);
 }
 
 int main() {
@@ -234,7 +225,7 @@ int main() {
                 printf("\n");
                 break;
             case 7:
-                display(root);
+                display(root,0);
                 break;
             case 8:
                 exit(0);

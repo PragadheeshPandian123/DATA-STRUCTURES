@@ -42,7 +42,7 @@ int hashMultiply(int n,int m){
 }
 
 int *LinearProbingInsert(int *hashTable,int *arr,int arrSize,int m,int choice){
-    for(int i=0,k=0;i<arrSize;i++)
+    for(int i=0;i<arrSize;i++)
     {
         int collideCount=0;
         int intpos=(choice==1)?hashDiv(arr[i],m):hashMultiply(arr[i],m);
