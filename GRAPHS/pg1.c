@@ -1,17 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX 100  // Maximum number of vertices
 
-void createGraph(int graph[MAX][MAX], int *size) {
+// Structure for adjacency list node
+struct Node {
+    int vertex;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int vertex) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->vertex = vertex;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to create graph
+void createGraph(struct Node* adjList[], int* size) {
     int edges, src, dest;
 
     printf("Enter number of vertices: ");
     scanf("%d", size);
 
-    // Initialize all elements to 0
-    for (int i = 0; i < *size; i++)
-        for (int j = 0; j < *size; j++)
-            graph[i][j] = 0;
+    // Initialize adjacency list
+    for (int i = 0; i < *size; i++) {
+        adjList[i] = NULL;
+    }
 
     printf("Enter number of edges: ");
     scanf("%d", &edges);
@@ -21,8 +37,15 @@ void createGraph(int graph[MAX][MAX], int *size) {
         scanf("%d %d", &src, &dest);
 
         if (src >= 0 && src < *size && dest >= 0 && dest < *size) {
-            graph[src][dest] = 1;
-            graph[dest][src] = 1;  // comment this line for directed graph
+            // Add edge src -> dest
+            struct Node* newNode = createNode(dest);
+            newNode->next = adjList[src];
+            adjList[src] = newNode;
+
+            // Add edge dest -> src (for undirected graph)
+            newNode = createNode(src);
+            newNode->next = adjList[dest];
+            adjList[dest] = newNode;
         } else {
             printf("Invalid edge (%d, %d) ignored!\n", src, dest);
         }
@@ -31,38 +54,47 @@ void createGraph(int graph[MAX][MAX], int *size) {
     printf("Graph created successfully!\n");
 }
 
-void displayGraph(int graph[MAX][MAX], int size) {
+// Function to display adjacency list
+void displayGraph(struct Node* adjList[], int size) {
     if (size == 0) {
         printf("Graph not created yet!\n");
         return;
     }
 
-    printf("\nAdjacency Matrix:\n");
+    printf("\nAdjacency List Representation:\n");
     for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("%d ", graph[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("\nGraph Connections:\n");
-    for (int i = 0; i < size; i++) {
+        struct Node* temp = adjList[i];
         printf("Vertex %d -> ", i);
-        for (int j = 0; j < size; j++) {
-            if (graph[i][j] == 1)
-                printf("%d ", j);
+        while (temp) {
+            printf("%d ", temp->vertex);
+            temp = temp->next;
         }
         printf("\n");
     }
 }
 
+// Function to clear the graph
+void clearGraph(struct Node* adjList[], int* size) {
+    for (int i = 0; i < *size; i++) {
+        struct Node* temp = adjList[i];
+        while (temp) {
+            struct Node* del = temp;
+            temp = temp->next;
+            free(del);
+        }
+        adjList[i] = NULL;
+    }
+    *size = 0;
+    printf("Graph cleared successfully!\n");
+}
+
 int main() {
-    int graph[MAX][MAX];
+    struct Node* adjList[MAX];
     int size = 0;
     int choice;
 
     do {
-        printf("\n====== Graph using Adjacency Matrix ======\n");
+        printf("\n====== Graph using Adjacency List ======\n");
         printf("1. Create Graph\n");
         printf("2. Display Graph\n");
         printf("3. Clear Graph\n");
@@ -72,16 +104,15 @@ int main() {
 
         switch (choice) {
             case 1:
-                createGraph(graph, &size);
+                createGraph(adjList, &size);
                 break;
 
             case 2:
-                displayGraph(graph, size);
+                displayGraph(adjList, size);
                 break;
 
             case 3:
-                size = 0;
-                printf("Graph cleared successfully!\n");
+                clearGraph(adjList, &size);
                 break;
 
             case 4:
@@ -95,3 +126,4 @@ int main() {
 
     return 0;
 }
+  
